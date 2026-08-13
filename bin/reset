@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+if ENV["RAILS_ENV"] && ENV["RAILS_ENV"] != "development"
+  abort "This command can only be run in development environment."
+end
+
+require "fileutils"
+
+schema_file = File.expand_path("../db/schema.rb", __dir__)
+
+puts "Removing schema.rb..."
+FileUtils.rm_f(schema_file)
+
+puts "Dropping database..."
+system("bin/rails db:drop") || abort("Failed to drop database")
+
+puts "Creating database..."
+system("bin/rails db:create") || abort("Failed to create database")
+
+puts "Running migrations..."
+system("bin/rails db:migrate") || abort("Failed to run migrations")
+
+puts "Seeding database..."
+system("bin/rails db:seed") || abort("Failed to seed database")
+
+puts "Database reset completed successfully."

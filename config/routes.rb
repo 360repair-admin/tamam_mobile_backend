@@ -11,4 +11,18 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  namespace :api do
+    namespace :v1 do
+      namespace :auth do
+        post "otp", to: "otp#create"
+        post "otp/verify", to: "otp#verify"
+      end
+
+      get "me", to: "profile#show"
+      patch "me", to: "profile#update"
+
+      resources :addresses, only: [:index, :create, :update, :destroy]
+    end
+  end
 end
