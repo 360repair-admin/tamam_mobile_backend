@@ -66,3 +66,5 @@ group :test do
 end
 
 gem "jwt"
+gem "dotenv"
+gem "httparty"

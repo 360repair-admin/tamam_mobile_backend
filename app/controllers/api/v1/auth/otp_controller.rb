@@ -29,8 +29,16 @@ class Api::V1::Auth::OtpController < Api::BaseController
       retry_after_seconds: 60
     }
 
-    # TODO: Replace with SMS provider
-    response[:otp] = otp if Rails.env.development?
+    if ENV["SEND_SMS"] == true
+      SmsMessage.create!(
+        phone_number: otp_request.phone_number,
+        message: "Your TAMAM verification code is #{otp}.",
+        sms_provider: SmsMessage::SMS_PROVIDER,
+        sender_id: SmsMessage::SENDER_ID
+      )
+    else
+      response[:otp] = otp
+    end
 
     render json: response, status: :accepted
   end

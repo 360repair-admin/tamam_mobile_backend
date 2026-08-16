@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_12_132137) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_16_065043) do
   create_table "addresses", force: :cascade do |t|
     t.string "address_line"
     t.integer "city_id", null: false
@@ -72,8 +72,35 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_12_132137) do
     t.index ["country_id"], name: "index_regions_on_country_id"
   end
 
+  create_table "sms_messages", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "failed_at"
+    t.integer "failed_attempts", default: 0, null: false
+    t.text "message", null: false
+    t.string "phone_number", null: false
+    t.string "sender_id", null: false
+    t.datetime "sent_at"
+    t.string "sms_provider", null: false
+    t.integer "sms_template_id"
+    t.datetime "updated_at", null: false
+    t.index ["sms_template_id"], name: "index_sms_messages_on_sms_template_id"
+  end
+
+  create_table "sms_templates", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "message_body_ar", null: false
+    t.text "message_body_en", null: false
+    t.string "name_ar", null: false
+    t.string "name_en", null: false
+    t.boolean "system", default: false, null: false
+    t.string "unique_name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["unique_name"], name: "index_sms_templates_on_unique_name", unique: true
+  end
+
   add_foreign_key "addresses", "cities"
   add_foreign_key "addresses", "customers"
   add_foreign_key "cities", "regions"
   add_foreign_key "regions", "countries"
+  add_foreign_key "sms_messages", "sms_templates"
 end
