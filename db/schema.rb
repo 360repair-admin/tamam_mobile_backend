@@ -11,11 +11,14 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.1].define(version: 2026_08_16_065043) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
+
   create_table "addresses", force: :cascade do |t|
     t.string "address_line"
-    t.integer "city_id", null: false
+    t.bigint "city_id", null: false
     t.datetime "created_at", null: false
-    t.integer "customer_id", null: false
+    t.bigint "customer_id", null: false
     t.boolean "is_default", default: false, null: false
     t.datetime "updated_at", null: false
     t.index ["city_id"], name: "index_addresses_on_city_id"
@@ -26,7 +29,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_16_065043) do
     t.datetime "created_at", null: false
     t.string "name_ar", null: false
     t.string "name_en", null: false
-    t.integer "region_id", null: false
+    t.bigint "region_id", null: false
     t.datetime "updated_at", null: false
     t.index ["region_id"], name: "index_cities_on_region_id"
   end
@@ -64,7 +67,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_16_065043) do
 
   create_table "regions", force: :cascade do |t|
     t.string "code"
-    t.integer "country_id", null: false
+    t.bigint "country_id", null: false
     t.datetime "created_at", null: false
     t.string "name_ar", null: false
     t.string "name_en", null: false
@@ -81,7 +84,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_16_065043) do
     t.string "sender_id", null: false
     t.datetime "sent_at"
     t.string "sms_provider", null: false
-    t.integer "sms_template_id"
+    t.bigint "sms_template_id"
     t.datetime "updated_at", null: false
     t.index ["sms_template_id"], name: "index_sms_messages_on_sms_template_id"
   end
