@@ -88,8 +88,15 @@ class Api::V1::Auth::OtpController < Api::BaseController
     
         render json: { access_token: token, customer: customer }
       end
-    rescue
-      return render_error("customer_creation_failed", "Unable to create customer")
+    rescue => e
+      Rails.logger.error("OTP verification failed: #{e.class}: #{e.message}")
+      Rails.logger.error(e.backtrace.join("\n"))
+    
+      if Rails.env.production?
+        render_error("customer_creation_failed", "Unable to create customer")
+      else
+        render_error("customer_creation_failed", "#{e.class}: #{e.message}")
+      end
     end
   end
 
