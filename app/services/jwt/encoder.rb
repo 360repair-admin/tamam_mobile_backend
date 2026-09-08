@@ -1,6 +1,6 @@
 module Jwt
   class Encoder
-    SECRET = Rails.application.credentials.secret_key_base
+    SECRET = Rails.application.secret_key_base
 
     def self.call(customer)
       payload = {
