@@ -9,12 +9,17 @@ class Api::V1::Auth::OtpController < Api::BaseController
       return render_error("invalid_purpose", "Invalid OTP purpose")
     end
 
-    if otp_params[:phone_number].blank?
-      return render_error("invalid_phone_number", "Phone number is required")
+    phone_number = PhoneNumber.normalize(otp_params[:phone_number])
+
+    unless PhoneNumber.valid?(phone_number)
+      return render_error(
+        "invalid_phone_number",
+        "Phone number must be a valid Saudi mobile number"
+      )
     end
 
     if otp_params[:purpose] == "login"
-      customer = Customer.find_by(phone_number: otp_params[:phone_number])
+      customer = Customer.find_by(phone_number: phone_number)
 
       unless customer
         return render_error("customer_not_found", "No customer exists with this phone number")
@@ -26,7 +31,7 @@ class Api::V1::Auth::OtpController < Api::BaseController
     end
 
     response = Otp::Request.call(
-      phone_number: otp_params[:phone_number],
+      phone_number: phone_number,
       purpose: otp_params[:purpose]
     )
 
@@ -34,9 +39,18 @@ class Api::V1::Auth::OtpController < Api::BaseController
   end
 
   def verify
+    phone_number = PhoneNumber.normalize(verify_params[:phone_number])
+
+    unless PhoneNumber.valid?(phone_number)
+      return render_error(
+        "invalid_phone_number",
+        "Phone number must be a valid Saudi mobile number"
+      )
+    end
+
     otp_request = OtpRequest.find_by(
       request_id: verify_params[:request_id],
-      phone_number: verify_params[:phone_number]
+      phone_number: phone_number
     )
 
     unless otp_request
