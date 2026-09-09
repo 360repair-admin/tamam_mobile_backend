@@ -44,11 +44,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_16_065043) do
 
   create_table "customers", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.datetime "deleted_at"
     t.string "email"
     t.string "full_name"
     t.string "locale", default: "ar", null: false
     t.string "phone_number", null: false
-    t.datetime "phone_number_verified_at", null: false
+    t.datetime "phone_number_verified_at"
+    t.datetime "terms_accepted_at"
     t.datetime "updated_at", null: false
     t.index ["phone_number"], name: "index_customers_on_phone_number", unique: true
   end

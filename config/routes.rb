@@ -17,10 +17,12 @@ Rails.application.routes.draw do
       namespace :auth do
         post "otp", to: "otp#create"
         post "otp/verify", to: "otp#verify"
+        post "signup", to: "signup#create"
       end
 
       get "me", to: "profile#show"
       patch "me", to: "profile#update"
+      delete "me", to: "profile#destroy"
 
       resources :addresses, only: [:index, :create, :update, :destroy]
     end

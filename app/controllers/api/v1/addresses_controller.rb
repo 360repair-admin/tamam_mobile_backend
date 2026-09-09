@@ -18,6 +18,13 @@ module Api
         render json: address
       end
 
+      def destroy
+        address = current_customer.addresses.find(params[:id])
+        address.destroy!
+
+        head :no_content
+      end
+
       private
 
       def address_params

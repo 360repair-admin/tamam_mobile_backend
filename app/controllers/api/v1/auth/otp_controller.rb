@@ -2,7 +2,7 @@ class Api::V1::Auth::OtpController < Api::BaseController
   skip_before_action :authenticate_customer!, only: [:create, :verify]
 
   MAX_ATTEMPTS = 5
-  OTP_PURPOSES = %w[login profile_edit payment].freeze
+  OTP_PURPOSES = %w[signup login profile_edit payment].freeze
 
   def create
     unless OTP_PURPOSES.include?(otp_params[:purpose])
@@ -13,32 +13,22 @@ class Api::V1::Auth::OtpController < Api::BaseController
       return render_error("invalid_phone_number", "Phone number is required")
     end
 
-    otp = SecureRandom.random_number(10_000).to_s.rjust(4, "0")
+    if otp_params[:purpose] == "login"
+      customer = Customer.find_by(phone_number: otp_params[:phone_number])
 
-    otp_request = OtpRequest.create!(
-      phone_number: otp_params[:phone_number],
-      purpose: otp_params[:purpose],
-      code_digest: Digest::SHA256.hexdigest(otp),
-      request_id: SecureRandom.uuid,
-      expires_at: 5.minutes.from_now,
-      attempts: 0
-    )
+      unless customer
+        return render_error("customer_not_found", "No customer exists with this phone number")
+      end
 
-    response = {
-      request_id: otp_request.request_id,
-      retry_after_seconds: 60
-    }
-
-    if ENV["SEND_SMS"] == true
-      SmsMessage.create!(
-        phone_number: otp_request.phone_number,
-        message: "Your TAMAM verification code is #{otp}.",
-        sms_provider: SmsMessage::SMS_PROVIDER,
-        sender_id: SmsMessage::SENDER_ID
-      )
-    else
-      response[:otp] = otp
+      if customer.deleted_at.present?
+        return render_error("customer_deactivated", "This account has been deactivated")
+      end
     end
+
+    response = Otp::Request.call(
+      phone_number: otp_params[:phone_number],
+      purpose: otp_params[:purpose]
+    )
 
     render json: response, status: :accepted
   end
@@ -79,19 +69,26 @@ class Api::V1::Auth::OtpController < Api::BaseController
     begin
       ActiveRecord::Base.transaction do
         otp_request.update!(consumed_at: Time.current)
-    
-        customer = Customer.find_or_create_by!(phone_number: otp_request.phone_number) do |customer|
-          customer.phone_number_verified_at = Time.current
-        end
-    
+
+        customer = Customer.find_by!(
+          phone_number: otp_request.phone_number
+        )
+
+        customer.update!(
+          phone_number_verified_at: Time.current
+        )
+
         token = Jwt::Encoder.call(customer)
-    
-        render json: { access_token: token, customer: customer }
+
+        render json: {
+          access_token: token,
+          customer: customer
+        }
       end
     rescue => e
       Rails.logger.error("OTP verification failed: #{e.class}: #{e.message}")
       Rails.logger.error(e.backtrace.join("\n"))
-    
+
       if Rails.env.production?
         render_error("customer_creation_failed", "Unable to create customer")
       else
