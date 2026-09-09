@@ -6,27 +6,24 @@ class Api::V1::Auth::OtpController < Api::BaseController
 
   def create
     unless OTP_PURPOSES.include?(otp_params[:purpose])
-      return render_error("invalid_purpose", "Invalid OTP purpose")
+      return render_error("invalid_purpose")
     end
 
     phone_number = PhoneNumber.normalize(otp_params[:phone_number])
 
     unless PhoneNumber.valid?(phone_number)
-      return render_error(
-        "invalid_phone_number",
-        "Phone number must be a valid Saudi mobile number"
-      )
+      return render_error("invalid_phone_number")
     end
 
     if otp_params[:purpose] == "login"
       customer = Customer.find_by(phone_number: phone_number)
 
       unless customer
-        return render_error("customer_not_found", "No customer exists with this phone number")
+        return render_error("customer_not_found")
       end
 
       if customer.deleted_at.present?
-        return render_error("customer_deactivated", "This account has been deactivated")
+        return render_error("customer_deactivated")
       end
     end
 
@@ -42,10 +39,7 @@ class Api::V1::Auth::OtpController < Api::BaseController
     phone_number = PhoneNumber.normalize(verify_params[:phone_number])
 
     unless PhoneNumber.valid?(phone_number)
-      return render_error(
-        "invalid_phone_number",
-        "Phone number must be a valid Saudi mobile number"
-      )
+      return render_error("invalid_phone_number")
     end
 
     otp_request = OtpRequest.find_by(
@@ -54,19 +48,19 @@ class Api::V1::Auth::OtpController < Api::BaseController
     )
 
     unless otp_request
-      return render_error("invalid_otp_request", "Invalid OTP request")
+      return render_error("invalid_otp_request")
     end
 
     if otp_request.consumed_at.present?
-      return render_error("otp_already_used", "OTP has already been used")
+      return render_error("otp_already_used")
     end
 
     if otp_request.expires_at < Time.current
-      return render_error("otp_expired", "OTP has expired")
+      return render_error("otp_expired")
     end
 
     if otp_request.attempts >= MAX_ATTEMPTS
-      return render_error("otp_attempts_exceeded", "Maximum OTP attempts exceeded")
+      return render_error("otp_attempts_exceeded")
     end
 
     digest = Digest::SHA256.hexdigest(verify_params[:code].to_s)
@@ -77,7 +71,7 @@ class Api::V1::Auth::OtpController < Api::BaseController
     )
       otp_request.increment!(:attempts)
 
-      return render_error("invalid_otp", "Invalid OTP")
+      return render_error("invalid_otp")
     end
 
     begin
@@ -121,11 +115,10 @@ class Api::V1::Auth::OtpController < Api::BaseController
     params.permit(:phone_number, :request_id, :code)
   end
 
-  def render_error(code, message)
+  def render_error(code)
     render json: {
       error: {
-        code: code,
-        message: message
+        code: code, message: I18n.t("errors.#{code}")
       }
     }, status: :unprocessable_entity
   end

@@ -1,0 +1,13 @@
+ar:
+  errors:
+    invalid_phone_number: "يجب أن يكون رقم الهاتف رقم جوال سعودي صالحًا"
+    terms_not_accepted: "يجب الموافقة على الشروط والأحكام"
+    invalid_purpose: "الغرض من رمز التحقق غير صالح"
+    customer_not_found: "لا يوجد حساب بهذا الرقم"
+    customer_deactivated: "تم تعطيل هذا الحساب"
+    customer_already_exists: "يوجد حساب بهذا الرقم بالفعل"
+    invalid_otp_request: "طلب رمز التحقق غير صالح"
+    otp_already_used: "تم استخدام رمز التحقق بالفعل"
+    otp_expired: "انتهت صلاحية رمز التحقق"
+    otp_attempts_exceeded: "تم تجاوز الحد الأقصى لمحاولات رمز التحقق"
+    invalid_otp: "رمز التحقق غير صحيح"
