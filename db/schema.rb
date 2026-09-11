@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_16_065043) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_16_065044) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -53,6 +53,40 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_16_065043) do
     t.datetime "terms_accepted_at"
     t.datetime "updated_at", null: false
     t.index ["phone_number"], name: "index_customers_on_phone_number", unique: true
+  end
+
+  create_table "faulty_errors", force: :cascade do |t|
+    t.datetime "assigned_at", precision: nil
+    t.bigint "assigned_by_id"
+    t.string "assigned_by_type"
+    t.bigint "assigned_to_id"
+    t.string "assigned_to_type"
+    t.datetime "created_at", null: false
+    t.string "error_class", null: false
+    t.string "fingerprint", null: false
+    t.datetime "last_event_at", precision: nil, null: false
+    t.string "message", default: "No message provided", null: false
+    t.datetime "resolved_at", precision: nil
+    t.bigint "resolved_by_id"
+    t.string "resolved_by_type"
+    t.string "status", default: "unresolved", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assigned_by_type", "assigned_by_id"], name: "index_faulty_errors_on_assigned_by_type_and_assigned_by_id"
+    t.index ["assigned_to_type", "assigned_to_id"], name: "index_faulty_errors_on_assigned_to_type_and_assigned_to_id"
+    t.index ["fingerprint"], name: "index_faulty_errors_on_fingerprint", unique: true
+    t.index ["resolved_by_type", "resolved_by_id"], name: "index_faulty_errors_on_resolved_by_type_and_resolved_by_id"
+  end
+
+  create_table "faulty_events", force: :cascade do |t|
+    t.text "backtrace", null: false
+    t.jsonb "code_snippet", default: {}
+    t.jsonb "context", default: {}
+    t.datetime "created_at", null: false
+    t.bigint "faulty_error_id", null: false
+    t.string "request_id"
+    t.string "status", default: "unresolved", null: false
+    t.datetime "updated_at", null: false
+    t.index ["faulty_error_id"], name: "index_faulty_events_on_faulty_error_id"
   end
 
   create_table "otp_requests", force: :cascade do |t|
@@ -106,6 +140,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_16_065043) do
   add_foreign_key "addresses", "cities"
   add_foreign_key "addresses", "customers"
   add_foreign_key "cities", "regions"
+  add_foreign_key "faulty_events", "faulty_errors"
   add_foreign_key "regions", "countries"
   add_foreign_key "sms_messages", "sms_templates"
 end

@@ -28,4 +28,6 @@ Rails.application.routes.draw do
       resources :addresses, only: [:index, :create, :update, :destroy]
     end
   end
+
+  mount Faulty::Engine => "/faulty"
 end
