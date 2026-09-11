@@ -33,7 +33,6 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
       build-essential \
       git \
-      openssh-client \
       libvips \
       libyaml-dev \
       libpq-dev \

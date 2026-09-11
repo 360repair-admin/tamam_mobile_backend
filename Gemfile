@@ -68,4 +68,4 @@ end
 gem "jwt"
 gem "dotenv"
 gem "httparty"
-gem "faulty", git: "git@github.com:360repair/faulty.git"
+gem "faulty", path: "vendor/faulty"

@@ -1,6 +1,5 @@
-GIT
-  remote: git@github.com:360repair/faulty.git
-  revision: 30c305b49e1ee98c390152cf0d18911af2ff373d
+PATH
+  remote: vendor/faulty
   specs:
     faulty (0.1.0)
 
