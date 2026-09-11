@@ -1,0 +1,134 @@
+<div id="faulty-dashboard">
+  <div class="dashboard-wrapper">
+    <!-- Header -->
+    <div class="dashboard-header">
+      <h1 class="dashboard-title">
+        Errors
+        <span class="error-count-badge"><%= @errors.count %></span>
+      </h1>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <%= form_with url: errors_path, method: :get, local: true do %>
+        <div class="filter-item">
+          <label for="status">Status</label>
+          <%= select_tag :status,
+                options_for_select(
+                  [["All", ""], ["Unresolved", "unresolved"], ["Resolved", "resolved"]],
+                  params[:status]
+                ),
+                onchange: "this.form.submit();" %>
+        </div>
+
+        <div class="filter-item">
+          <label for="assigned_to">Assigned To</label>
+          <%= select_tag :assigned_to,
+                options_for_select(
+                  [["All", ""], ["Unassigned", "unassigned"]] +
+                  @authorized_users.map { |u| [u.email, u.id] },
+                  params[:assigned_to]
+                ),
+                onchange: "this.form.submit();" %>
+        </div>
+
+        <div class="filter-item">
+          <label for="timeframe">Timeframe</label>
+          <%= select_tag :timeframe,
+                options_for_select(
+                  [["All Time", ""], ["Last 24 Hours", "24h"], ["Last 7 Days", "7d"], ["Last 30 Days", "30d"]],
+                  params[:timeframe]
+                ),
+                onchange: "this.form.submit();" %>
+        </div>
+
+        <div class="filter-item date-range">
+          <div style="flex: 1;">
+            <label for="from_date">From</label>
+            <%= date_field_tag :from_date, params[:from_date], onchange: "this.form.submit();" %>
+          </div>
+          <span style="padding-top: 22px;">to</span>
+          <div style="flex: 1;">
+            <label for="to_date">To</label>
+            <%= date_field_tag :to_date, params[:to_date], onchange: "this.form.submit();" %>
+          </div>
+        </div>
+
+        <%= hidden_field_tag :page, params[:page] if params[:page].present? %>
+      <% end %>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container">
+      <div class="table-wrapper">
+        <table class="dashboard-table">
+          <thead>
+            <tr>
+              <th style="width: 80px;">ID</th>
+              <th style="width: 45%;">Error</th>
+              <th style="width: 80px; text-align: center;">Events</th>
+              <th style="width: 80px; text-align: center;">Users</th>
+              <th style="width: 100px;">Status</th>
+              <th style="width: 180px;">Assigned To</th>
+              <th style="width: 100px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if @errors.any? %>
+              <% @errors.each do |error| %>
+                <tr>
+                  <td><span class="error-id">#<%= error.id %></span></td>
+                  <td>
+                    <div class="error-message">
+                      <span class="error-class"><%= error.error_class %></span>
+                      <span class="error-text"><%= truncate(error.message, length: 100) %></span>
+                      <span class="event-range"><%= event_time_range(error) %></span>
+                    </div>
+                  </td>
+                  <td style="text-align: center;">
+                    <span class="event-count"><%= error.events.count %></span>
+                  </td>
+                  <td style="text-align: center;">
+                    <span class="user-count"><%= error.unique_users_count %></span>
+                  </td>
+                  <td>
+                    <span class="status-badge <%= error.status %>"><%= error.status.capitalize %></span>
+                  </td>
+                  <td>
+                    <% if error.assigned_to.present? %>
+                      <span class="assigned-to"><%= error.assigned_to.email %></span>
+                    <% else %>
+                      <span class="unassigned">Unassigned</span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <%= link_to "View", error_path(error), class: "dashboard-link" %>
+                  </td>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr>
+                <td colspan="7" style="text-align: center;">No errors found</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="faulty-pagination">
+      <%= faulty_pagination(@page, @per_page, @total_count, ->(opts) {
+        Faulty::Engine.routes.url_helpers.errors_path(
+          opts.merge(
+            status: params[:status],
+            assigned_to: params[:assigned_to],
+            timeframe: params[:timeframe],
+            from_date: params[:from_date],
+            to_date: params[:to_date]
+          )
+        )
+      }) %>
+    </div>
+  </div>
+</div>

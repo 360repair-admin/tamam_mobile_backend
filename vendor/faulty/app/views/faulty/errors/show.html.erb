@@ -1,0 +1,224 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">Error Details</h1>
+
+    <div id="error-actions">
+      <% if @error.status == "unresolved" %>
+        <%= form_with url: resolve_error_path(@error), method: :patch, class: "inline-form" do %>
+          <%= hidden_field_tag :status, "resolved" %>
+          <%= submit_tag "Mark as Resolved", class: "btn btn-success" %>
+        <% end %>
+      <% else %>
+        <span class="resolved-badge">Resolved</span>
+      <% end %>
+
+      <button type="button" class="btn btn-primary" onclick="openAssignModal()">Assign To</button>
+
+      <!-- Comments Toggle Button -->
+      <button id="toggle-comments" class="btn btn-secondary" style="position: fixed; right: 24px; bottom: 24px; z-index: 1040; width: 56px; height: 56px; border-radius: 50%; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); transition: all 0.3s ease; background: var(--faulty-primary); color: white; border: none; cursor: pointer;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        <span style="position: absolute; top: -8px; right: -8px; background: var(--faulty-success); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; border: 3px solid var(--faulty-surface);">
+          <%= @error.comments.count %>
+        </span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Error info -->
+  <div class="error-details">
+    <p><strong>ID:</strong> <span class="error-value"><%= @error.id %></span></p>
+    <p><strong>Class:</strong> <span class="error-value"><%= @error.error_class %></span></p>
+    <p><strong>Message:</strong> <span class="error-value"><%= @error.message %></span></p>
+    <p><strong>Events:</strong> <span class="error-value"><%= @error.events.count %></span></p>
+    <p><strong>Last Event At:</strong> <span class="error-value"><%= @error.last_event_at.strftime("%Y-%m-%d %H:%M:%S") %></span></p>
+  </div>
+
+  <h2 class="dashboard-title" style="font-size:22px; margin-top:25px;">Events</h2>
+
+  <div class="events">
+    <% @error.events.order(created_at: :desc).each_with_index do |event, idx| %>
+      <div class="event <%= "active" if idx == 0 %>">
+        <div class="event-header" onclick="this.nextElementSibling.classList.toggle('show')">
+          <strong>Event at <%= event.created_at.strftime("%Y-%m-%d %H:%M:%S") %></strong>
+          <% if idx == 0 %>
+            <span class="latest-badge">Latest</span>
+          <% end %>
+        </div>
+
+        <div class="event-body <%= "show" if idx == 0 %>">
+          
+          <!-- Tabs -->
+          <div class="tabs">
+            <button class="tab-button active" onclick="switchTab(this)">Code Snippet</button>
+            <button class="tab-button" onclick="switchTab(this)">Backtrace</button>
+            <button class="tab-button" onclick="switchTab(this)">User Info</button>
+            <button class="tab-button" onclick="switchTab(this)">Request Info</button>
+          </div>
+
+          <div class="tab-content">
+            <!-- Code Snippet -->
+            <div class="tab-pane active">
+              <% if event.code_snippet.present? && event.code_snippet.any? %>
+                <h3 class="dashboard-title">Code Snippet</h3>
+
+                <% event.code_snippet.each do |snippet| %>
+                  <p class="code-meta">
+                    <strong><%= snippet["file"] %>:</strong>
+                    line <%= snippet["line"] %>
+                  </p>
+
+                  <div class="code-snippet">
+                    <% snippet["context"].each do |line| %>
+                      <% if line["highlighted"] %>
+                        <div class="code-line-highlighted">
+                          <span class="line-number"><%= line["number"] %>:</span>
+                          <span class="line-code"><%= ERB::Util.html_escape(line["code"]) %></span>
+                        </div>
+                      <% else %>
+                        <div class="code-line-normal">
+                          <span class="line-number"><%= line["number"] %>:</span>
+                          <span class="line-code"><%= ERB::Util.html_escape(line["code"]) %></span>
+                        </div>
+                      <% end %>
+                    <% end %>
+                  </div>
+                <% end %>
+              <% else %>
+                <p class="alert alert-error">No code snippet available</p>
+              <% end %>
+            </div>
+
+            <!-- Backtrace -->
+            <div class="tab-pane">
+              <% if event.backtrace.present? %>
+                <h3 class="dashboard-title">Backtrace</h3>
+                <pre class="error-backtrace"><%= event.backtrace %></pre>
+              <% else %>
+                <p class="alert alert-error">No backtrace available</p>
+              <% end %>
+            </div>
+
+            <!-- User Info -->
+            <div class="tab-pane">
+              <% if event.context.present? && event.context["current_user"] %>
+                <h3 class="dashboard-title">User Info</h3>
+                <% event.context["current_user"].each do |key, value| %>
+                  <p><strong><%= key.humanize %>:</strong> <span class="error-value"><%= value %></span></p>
+                <% end %>
+              <% else %>
+                <p class="alert alert-error">No user information available</p>
+              <% end %>
+            </div>
+
+            <!-- Request Info -->
+            <!-- Request / Job Info -->
+            <div class="tab-pane">
+              <% if event.context.present? %>
+                <% if event.context["job_class"] %>
+                  <!-- Background Job Info -->
+                  <h3 class="dashboard-title">Job Info</h3>
+                  <div class="job-info">
+                    <pre class="request-params"><%= JSON.pretty_generate(event.context || {}) %></pre>
+                  </div>
+                <% else %>
+                  <!-- Web Request Info -->
+                  <h3 class="dashboard-title">Request Info</h3>
+
+                  <div class="request-info">
+                    <div class="request-info-item"><strong>Request ID:</strong> <span><%= event.request_id || "N/A" %></span></div>
+                    <div class="request-info-item"><strong>Path:</strong> <span><%= event.context["path"] %></span></div>
+                    <div class="request-info-item"><strong>Method:</strong> <span><%= event.context["method"] %></span></div>
+                    <div class="request-info-item"><strong>IP:</strong> <span><%= event.context["ip"] %></span></div>
+                    <div class="request-info-item"><strong>User Agent:</strong> <span><%= event.context["user_agent"] %></span></div>
+                  </div>
+
+                  <h4 class="request-params-title">Params</h4>
+                  <pre class="request-params"><%= JSON.pretty_generate(event.context["params"] || {}) %></pre>
+                <% end %>
+              <% else %>
+                <p class="alert alert-error">No request or job info available</p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%= link_to "Back to list", errors_path, class: "dashboard-link back-link" %>
+</div>
+
+<!-- Comments Slide Panel -->
+<div id="comments-panel" class="comments-panel">
+  <div class="comments-panel-header">
+    <h3>Comments (<%= @error.comments.count %>)</h3>
+    <button id="close-comments" class="comments-close-btn">✕</button>
+  </div>
+
+  <div class="comments-panel-body">
+    <!-- Comments List -->
+    <% if @error.comments.any? %>
+      <% @error.comments.order(:id).each do |comment| %>
+        <div class="comment <%= comment.author == Faulty.current_faulty_user.call(self) ? 'own-comment' : '' %>">
+          <div class="comment-author">
+            <%= comment.author == Faulty.current_faulty_user.call(self) ? "You" : Faulty::NameResolver.call(comment.author) %>
+          </div>
+
+          <div class="comment-date"><%= time_ago_in_words(comment.created_at) %> ago</div>
+          <div class="comment-content"><%= simple_format(ERB::Util.html_escape(comment.content)) %></div>
+        </div>
+      <% end %>
+    <% else %>
+      <p style="text-align: center; color: var(--faulty-text-muted); font-size: 13px;">No comments yet.</p>
+    <% end %>
+  </div>
+
+  <!-- Add Comment Form at Bottom -->
+  <div class="comments-panel-footer">
+    <%= form_with model: [@error, @error.comments.new], local: true do |f| %>
+      <div style="margin-bottom: 8px;">
+        <%= f.text_area :content, placeholder: "Add a comment...", rows: 2,
+            style: "width: 100%; padding: 8px; border: 1px solid var(--faulty-border); border-radius: 6px; font-size: 13px; font-family: inherit; resize: none;" %>
+      </div>
+      <%= f.submit "Post", class: "btn", style: "width: 100%;" %>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  function switchTab(button) {
+    const container = button.closest('.event-body');
+    const buttons = container.querySelectorAll('.tab-button');
+    const panes = container.querySelectorAll('.tab-pane');
+
+    buttons.forEach(btn => btn.classList.remove('active'));
+    panes.forEach(pane => pane.classList.remove('active'));
+
+    button.classList.add('active');
+    const index = Array.from(buttons).indexOf(button);
+    panes[index].classList.add('active');
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const panel = document.getElementById("comments-panel");
+    const toggleBtn = document.getElementById("toggle-comments");
+    const closeBtn = document.getElementById("close-comments");
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        panel.classList.toggle("show");
+      });
+    }
+
+    if (closeBtn) {
+      closeBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        panel.classList.remove("show");
+      });
+    }
+  });
+</script>

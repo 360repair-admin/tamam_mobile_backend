@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Faulty Dashboard</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= stylesheet_link_tag "faulty/dashboard", media: "all", "data-turbo-track": "reload" %>
+  <%= javascript_include_tag "faulty/dashboard", "data-turbo-track": "reload" %>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav id="faulty-navbar">
+    <div class="navbar-container">
+      <div class="navbar-left">
+        <a href="<%= errors_path %>" class="navbar-brand">
+          <div class="brand-icon">⚡</div>
+          Faulty
+        </a>
+        <div class="navbar-links">
+          <a href="<%= errors_path %>" class="navbar-link active">Errors</a>
+          <a href="#" class="navbar-link">Performance</a>
+          <a href="#" class="navbar-link">Users</a>
+          <a href="#" class="navbar-link">Settings</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <%= yield %>
+
+  <%= render "shared/assign_modal" %>
+
+</body>
+</html>

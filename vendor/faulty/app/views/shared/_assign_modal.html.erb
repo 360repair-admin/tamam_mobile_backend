@@ -1,0 +1,32 @@
+<div id="assignModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title">Assign Error</h2>
+      <button class="close-btn" onclick="closeAssignModal()" type="button">&times;</button>
+    </div>
+
+    <form action="#" method="post" onsubmit="submitAssign(event)">
+      <div class="modal-body">
+        <label for="assignee_id" class="modal-label">Assign to Developer</label>
+        <select id="assignee" name="assignee_id" class="modal-select">
+          <option value="">Select a developer</option>
+
+          <% if @authorized_users.present? %>
+            <% @authorized_users.each do |user| %>
+              <option value="<%= user.id %>">
+                <%= user.try(:name) || user.try(:email) || "User ##{user.id}" %>
+              </option>
+            <% end %>
+          <% else %>
+            <option value="">No authorized users available</option>
+          <% end %>
+        </select>
+      </div>
+
+      <div class="modal-footer">
+        <input type="submit" class="btn btn-primary" value="Assign">
+        <button type="button" class="btn btn-secondary" onclick="closeAssignModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
