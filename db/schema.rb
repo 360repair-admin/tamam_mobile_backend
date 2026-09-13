@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_13_114726) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_13_131144) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -157,6 +157,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_13_114726) do
     t.string "unique_name", null: false
     t.datetime "updated_at", null: false
     t.index ["unique_name"], name: "index_sms_templates_on_unique_name", unique: true
+  end
+
+  create_table "vehicle_makes", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name_ar", null: false
+    t.string "name_en", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_foreign_key "addresses", "cities"

@@ -8,6 +8,16 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
+puts "Seeding countries..."
 load Rails.root.join("db/seeds/countries.rb")
+
+puts "Seeding regions..."
 load Rails.root.join("db/seeds/regions.rb")
+
+puts "Seeding cities..."
 load Rails.root.join("db/seeds/cities.rb")
+
+puts "Seeding vehicle makes..."
+load Rails.root.join("db/seeds/vehicle_makes.rb")
+
+puts "Seeding completed."
