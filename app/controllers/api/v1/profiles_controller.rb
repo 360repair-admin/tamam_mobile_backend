@@ -1,6 +1,6 @@
 module Api
   module V1
-    class ProfileController < Api::BaseController
+    class ProfilesController < Api::BaseController
       def show
         render json: { customer: current_customer }
       end

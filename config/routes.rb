@@ -21,10 +21,10 @@ Rails.application.routes.draw do
         post "logout", to: "otp#logout"
       end
 
-      get "me", to: "profile#show"
-      patch "me", to: "profile#update"
-      post "me/delete/request-otp", to: "profile#request_deletion_otp"
-      delete "me", to: "profile#destroy"
+      get "me", to: "profiles#show"
+      patch "me", to: "profiles#update"
+      post "me/delete/request-otp", to: "profiles#request_deletion_otp"
+      delete "me", to: "profiles#destroy"
 
       resources :addresses, only: [:index, :create, :update, :destroy]
     end
