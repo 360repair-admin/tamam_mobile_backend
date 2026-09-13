@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_13_095106) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_13_114726) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -99,6 +99,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_13_095106) do
     t.index ["faulty_error_id"], name: "index_faulty_events_on_faulty_error_id"
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.text "body_ar", null: false
+    t.text "body_en", null: false
+    t.datetime "created_at", null: false
+    t.bigint "customer_id"
+    t.datetime "read_at"
+    t.string "title_ar", null: false
+    t.string "title_en", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_notifications_on_customer_id"
+  end
+
   create_table "otp_requests", force: :cascade do |t|
     t.integer "attempts"
     t.string "code_digest"
@@ -152,6 +164,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_13_095106) do
   add_foreign_key "auth_sessions", "customers"
   add_foreign_key "cities", "regions"
   add_foreign_key "faulty_events", "faulty_errors"
+  add_foreign_key "notifications", "customers"
   add_foreign_key "regions", "countries"
   add_foreign_key "sms_messages", "sms_templates"
 end

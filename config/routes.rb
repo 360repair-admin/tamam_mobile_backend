@@ -27,6 +27,7 @@ Rails.application.routes.draw do
       delete "me", to: "profiles#destroy"
 
       resources :addresses, only: [:index, :create, :update, :destroy]
+      resources :notifications, only: [:index, :update]
     end
   end
 
