@@ -18,6 +18,7 @@ Rails.application.routes.draw do
         post "otp", to: "otp#create"
         post "otp/verify", to: "otp#verify"
         post "signup", to: "signup#create"
+        post "logout", to: "otp#logout"
       end
 
       get "me", to: "profile#show"

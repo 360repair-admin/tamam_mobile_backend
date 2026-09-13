@@ -15,11 +15,26 @@ module Authentication
     end
 
     token = authorization.delete_prefix("Bearer ").strip
+
     return unauthorized("missing_token", "Authentication token is required") if token.blank?
 
     payload = Jwt::Decoder.call(token)
 
-    @current_customer = Customer.find(payload["sub"])
+    @current_session = AuthSession.find_by(jti: payload["jti"])
+
+    unless @current_session
+      return unauthorized("invalid_token", "Invalid access token")
+    end
+
+    if @current_session.revoked?
+      return unauthorized("session_revoked", "Session has been revoked")
+    end
+
+    if @current_session.expired?
+      return unauthorized("token_expired", "Access token has expired")
+    end
+
+    @current_customer = @current_session.customer
 
     if @current_customer.deleted_at.present?
       return unauthorized("customer_deactivated", "This account has been deactivated")
@@ -34,9 +49,16 @@ module Authentication
     @current_customer
   end
 
+  def current_session
+    @current_session
+  end
+
   def unauthorized(code = "unauthorized", message = "Authentication required")
     render json: {
-      error: { code: code, message: message }
+      error: {
+        code: code,
+        message: message
+      }
     }, status: :unauthorized
   end
 end

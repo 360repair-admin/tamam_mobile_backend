@@ -1,5 +1,6 @@
 en:
   errors:
+    invalid_username: Username is required
     invalid_phone_number: "Phone number must be a valid Saudi mobile number"
     terms_not_accepted: "Terms and conditions must be accepted"
     invalid_purpose: "Invalid OTP purpose"

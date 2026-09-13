@@ -105,6 +105,14 @@ class Api::V1::Auth::OtpController < Api::BaseController
     end
   end
 
+  def logout
+    current_session.update!(revoked_at: Time.current)
+
+    render json: {
+      message: "Logged out successfully"
+    }
+  end
+
   private
 
   def otp_params

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_16_065044) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_13_095106) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -23,6 +23,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_16_065044) do
     t.datetime "updated_at", null: false
     t.index ["city_id"], name: "index_addresses_on_city_id"
     t.index ["customer_id"], name: "index_addresses_on_customer_id"
+  end
+
+  create_table "auth_sessions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "customer_id", null: false
+    t.datetime "expires_at", null: false
+    t.string "jti", null: false
+    t.datetime "revoked_at"
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_auth_sessions_on_customer_id"
   end
 
   create_table "cities", force: :cascade do |t|
@@ -139,6 +149,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_16_065044) do
 
   add_foreign_key "addresses", "cities"
   add_foreign_key "addresses", "customers"
+  add_foreign_key "auth_sessions", "customers"
   add_foreign_key "cities", "regions"
   add_foreign_key "faulty_events", "faulty_errors"
   add_foreign_key "regions", "countries"

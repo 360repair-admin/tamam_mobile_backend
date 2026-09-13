@@ -2,6 +2,10 @@ class Api::V1::Auth::SignupController < Api::BaseController
   skip_before_action :authenticate_customer!
 
   def create
+    if signup_params[:username].blank?
+      return render_error("invalid_username")
+    end
+
     if signup_params[:phone_number].blank?
       return render_error("invalid_phone_number")
     end
