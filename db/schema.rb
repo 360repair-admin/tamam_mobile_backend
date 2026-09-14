@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_13_131145) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_14_135026) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -180,6 +180,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_13_131145) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "vehicle_models", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name_ar", null: false
+    t.string "name_en", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "vehicle_make_id", null: false
+    t.index ["vehicle_make_id", "name_ar"], name: "index_vehicle_models_on_vehicle_make_id_and_name_ar", unique: true
+    t.index ["vehicle_make_id", "name_en"], name: "index_vehicle_models_on_vehicle_make_id_and_name_en", unique: true
+    t.index ["vehicle_make_id"], name: "index_vehicle_models_on_vehicle_make_id"
+  end
+
   add_foreign_key "addresses", "cities"
   add_foreign_key "addresses", "users"
   add_foreign_key "auth_sessions", "users"
@@ -189,4 +200,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_13_131145) do
   add_foreign_key "notifications", "users"
   add_foreign_key "regions", "countries"
   add_foreign_key "sms_messages", "sms_templates"
+  add_foreign_key "vehicle_models", "vehicle_makes"
 end

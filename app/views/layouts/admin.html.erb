@@ -11,14 +11,14 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>
 
-  <body class="min-h-screen bg-gray-100">
+  <body class="min-h-screen bg-page">
     <div class="min-h-screen flex flex-col md:flex-row">
 
       <% if current_admin_user %>
         <%= render "admin/shared/sidebar" %>
       <% end %>
 
-      <main class="flex-1 min-w-0 flex flex-col bg-gray-100">
+      <main class="flex-1 min-w-0 flex flex-col bg-page">
 
         <% if flash[:notice] %>
           <div class="px-6 pt-4">

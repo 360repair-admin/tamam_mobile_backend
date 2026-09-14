@@ -1,0 +1,92 @@
+<div class="overflow-hidden rounded-xl border border-border bg-surface shadow-sm">
+  <% if rows.any? %>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-border">
+        <thead class="bg-primary">
+          <tr>
+            <% columns.each do |column| %>
+              <th
+                scope="col"
+                class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-light <%= column[:header_class] %>"
+              >
+                <%= column[:label] %>
+              </th>
+            <% end %>
+
+            <% if actions.present? %>
+              <th
+                scope="col"
+                class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-light"
+              >
+                Actions
+              </th>
+            <% end %>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-border-light bg-surface">
+          <% rows.each do |row| %>
+            <tr class="transition hover:bg-page">
+              <% columns.each do |column| %>
+                <td class="whitespace-nowrap px-6 py-4 text-sm text-text <%= column[:cell_class] %>">
+                  <% if column[:render].present? %>
+                    <%= column[:render].call(row) %>
+                  <% else %>
+                    <% value = row.public_send(column[:attribute]) %>
+
+                    <%= value.presence || column.fetch(:fallback, "—") %>
+                  <% end %>
+                </td>
+              <% end %>
+
+              <% if actions.present? %>
+                <td class="whitespace-nowrap px-6 py-4 text-right text-sm">
+                  <div class="flex items-center justify-end gap-2">
+                    <% actions.each do |action| %>
+                      <% if action[:condition].blank? || action[:condition].call(row) %>
+                        <%= link_to(
+                          action[:label],
+                          action[:path].call(row),
+                          class: action[:class] || "font-medium text-accent hover:text-primary"
+                        ) %>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+  <% else %>
+    <div class="px-6 py-12 text-center">
+      <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary-light">
+        <svg
+          class="h-6 w-6 text-primary"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="1.5"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v5.625m-16.5-5.625v5.625m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"
+          />
+        </svg>
+      </div>
+
+      <h3 class="mt-4 text-sm font-semibold text-primary">
+        <%= empty_message %>
+      </h3>
+
+      <% if empty_description.present? %>
+        <p class="mt-1 text-sm text-text-muted">
+          <%= empty_description %>
+        </p>
+      <% end %>
+    </div>
+  <% end %>
+</div>

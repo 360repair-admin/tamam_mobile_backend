@@ -1,0 +1,61 @@
+<div class="mb-8 flex items-start justify-between gap-4">
+  <div>
+    <h1 class="text-2xl font-bold tracking-tight text-slate-900">
+      Customers
+    </h1>
+
+    <p class="mt-1 text-sm text-slate-500">
+      Manage TAMAM mobile customers.
+    </p>
+  </div>
+</div>
+
+<%= render "admin/shared/table",
+  rows: @customers,
+  columns: [
+    {
+      label: "Name",
+      render: ->(customer) {
+        safe_join([
+          content_tag(
+            :div,
+            customer.name.presence || "—",
+            class: "font-medium text-slate-900"
+          ),
+          content_tag(
+            :div,
+            "##{customer.id}",
+            class: "mt-0.5 text-xs text-slate-500"
+          )
+        ])
+      }
+    },
+    {
+      label: "Phone",
+      attribute: :phone_number
+    },
+    {
+      label: "Email",
+      attribute: :email,
+      fallback: "—"
+    },
+    {
+      label: "Status",
+      render: ->(customer) {
+        if customer.deleted_at.present?
+          admin_badge("Deactivated", type: :danger)
+        else
+          admin_badge("Active", type: :success)
+        end
+      }
+    }
+  ],
+  actions: [
+    {
+      label: "View",
+      path: ->(customer) { admin_customer_path(customer) }
+    }
+  ],
+  empty_message: "No customers found.",
+  empty_description: "Customers will appear here once they register."
+%>

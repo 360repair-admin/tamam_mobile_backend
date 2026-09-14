@@ -20,4 +20,7 @@ load Rails.root.join("db/seeds/cities.rb")
 puts "Seeding vehicle makes..."
 load Rails.root.join("db/seeds/vehicle_makes.rb")
 
+puts "Seeding vehicle models..."
+load Rails.root.join("db/seeds/vehicle_models.rb")
+
 puts "Seeding completed."

@@ -1,0 +1,156 @@
+<div>
+
+<%= render "admin/shared/header",
+  breadcrumbs: [
+    { label: "Customers", path: admin_customers_path },
+    { label: "Customer ##{@customer.id}" }
+  ],
+  title: @customer.name.presence || "Customer ##{@customer.id}",
+  subtitle: "",
+  badges: [
+    if @customer.deleted_at.present?
+      {
+        label: "Deactivated",
+        type: :danger
+      }
+    else
+      {
+        label: "Active",
+        type: :success
+      }
+    end
+  ],
+  actions: [
+    {
+      label: "Back to Customers",
+      path: admin_customers_path
+    }
+  ]
+%>
+
+<!-- Customer Details -->
+<%= render "admin/shared/details",
+  record: @customer,
+  title: "Customer Details",
+  fields: [
+    {
+      label: "ID",
+      attribute: :id
+    },
+    {
+      label: "Name",
+      attribute: :name
+    },
+    {
+      label: "Phone Number",
+      attribute: :phone_number
+    },
+    {
+      label: "Email",
+      attribute: :email
+    },
+    {
+      label: "Locale",
+      attribute: :locale
+    },
+    {
+      label: "Phone Verified",
+      render: ->(customer) {
+        if customer.phone_number_verified_at.present?
+          safe_join([
+            content_tag(
+              :span,
+              "Yes",
+              class: "font-medium text-success"
+            ),
+            content_tag(
+              :span,
+              " · #{customer.phone_number_verified_at.strftime('%Y-%m-%d %H:%M:%S')}",
+              class: "text-text-muted"
+            )
+          ])
+        else
+          content_tag(
+            :span,
+            "No",
+            class: "text-text-muted"
+          )
+        end
+      }
+    },
+    {
+      label: "Terms Accepted",
+      render: ->(customer) {
+        if customer.terms_accepted_at.present?
+          safe_join([
+            content_tag(
+              :span,
+              "Yes",
+              class: "font-medium text-success"
+            ),
+            content_tag(
+              :span,
+              " · #{customer.terms_accepted_at.strftime('%Y-%m-%d %H:%M:%S')}",
+              class: "text-text-muted"
+            )
+          ])
+        else
+          content_tag(
+            :span,
+            "No",
+            class: "text-text-muted"
+          )
+        end
+      }
+    },
+    {
+      label: "Created At",
+      render: ->(customer) {
+        customer.created_at.strftime("%Y-%m-%d %H:%M:%S")
+      }
+    },
+    {
+      label: "Updated At",
+      render: ->(customer) {
+        customer.updated_at.strftime("%Y-%m-%d %H:%M:%S")
+      }
+    },
+    {
+      label: "Deactivated At",
+      render: ->(customer) {
+        customer.deleted_at&.strftime("%Y-%m-%d %H:%M:%S")
+      },
+      value_class: "text-danger",
+      condition: ->(customer) {
+        customer.deleted_at.present?
+      }
+    }
+  ]
+%>
+
+<!-- Related Resources -->
+<div class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
+
+  <div class="rounded-xl border border-border bg-surface p-6 shadow-sm">
+    <p class="text-sm font-medium text-text-muted">
+      Addresses
+    </p>
+
+    <p class="mt-2 text-2xl font-bold text-primary">
+      <%= @customer.addresses.count %>
+    </p>
+  </div>
+
+  <div class="rounded-xl border border-border bg-surface p-6 shadow-sm">
+    <p class="text-sm font-medium text-text-muted">
+      Notifications
+    </p>
+
+    <p class="mt-2 text-2xl font-bold text-primary">
+      <%= @customer.notifications.count %>
+    </p>
+  </div>
+
+</div>
+
+</div>

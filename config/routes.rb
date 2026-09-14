@@ -40,7 +40,7 @@ Rails.application.routes.draw do
 
     get "/", to: "dashboard#index", as: :dashboard
 
-    resources :customers
+    resources :customers, only: [:index, :show]
   end
 
   mount Faulty::Engine => "/faulty"

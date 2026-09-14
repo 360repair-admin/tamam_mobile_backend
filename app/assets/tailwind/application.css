@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+@theme {
+  /* TAMAM Brand */
+  --color-primary: #173B68;
+  --color-secondary: #011431;
+  --color-tertiary: #E5EFFF;
+
+  /* UI */
+  --color-page: #F5F8FC;
+  --color-surface: #FFFFFF;
+  --color-border: #D9E2F0;
+  --color-border-light: #E8EEF6;
+
+  /* Text */
+  --color-text: #172B4D;
+  --color-text-muted: #64748B;
+  --color-light: #FFFFFF;
+
+  /* Accent */
+  --color-accent: #2563EB;
+
+  /* States */
+  --color-success: #15803D;
+  --color-warning: #B45309;
+  --color-danger: #B91C1C;
+}
