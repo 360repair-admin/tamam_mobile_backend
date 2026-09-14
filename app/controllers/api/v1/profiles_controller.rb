@@ -6,14 +6,39 @@ module Api
       end
 
       def update
-        unless Otp::Token.valid?(
-          token: params[:otp_token],
-          customer: current_customer,
+        otp_request = OtpRequest.find_by(
+          request_id: params[:request_id],
+          phone_number: current_customer.phone_number,
           purpose: "profile_edit"
         )
-          return render_error("invalid_otp_token")
+
+        unless otp_request
+          return render_error("invalid_otp_request")
         end
 
+        if otp_request.consumed_at.present?
+          return render_error("otp_already_used")
+        end
+
+        if otp_request.expires_at < Time.current
+          return render_error("otp_expired")
+        end
+
+        if otp_request.attempts >= 5
+          return render_error("otp_attempts_exceeded")
+        end
+
+        digest = Digest::SHA256.hexdigest(params[:code].to_s)
+
+        unless ActiveSupport::SecurityUtils.secure_compare(
+          otp_request.code_digest,
+          digest
+        )
+          otp_request.increment!(:attempts)
+          return render_error("invalid_otp")
+        end
+
+        otp_request.update!(consumed_at: Time.current)
         current_customer.update!(profile_params)
 
         render json: { customer: current_customer }
