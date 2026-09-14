@@ -28,5 +28,14 @@ class CreateFaultyTables < ActiveRecord::Migration[6.0]
 
       t.timestamps null: false
     end
+
+    create_table :faulty_comments do |t|
+      t.references :faulty_error, null: false, foreign_key: true
+      t.references :author, polymorphic: true, null: false
+
+      t.text :content, null: false
+
+      t.timestamps null: false
+    end
   end
 end

@@ -26,7 +26,7 @@ Faulty.configure do |config|
   # Must return the current logged-in user object.
   config.current_faulty_user = lambda do |context|
     # Example if you use CurrentAttributes:
-    nil
+    Current.user rescue nil
 
     # Example with Devise:
     # context.respond_to?(:current_user) ? context.current_user : nil

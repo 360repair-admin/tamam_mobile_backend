@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_13_131144) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_13_131145) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -63,6 +63,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_13_131144) do
     t.datetime "terms_accepted_at"
     t.datetime "updated_at", null: false
     t.index ["phone_number"], name: "index_customers_on_phone_number", unique: true
+  end
+
+  create_table "faulty_comments", force: :cascade do |t|
+    t.bigint "author_id", null: false
+    t.string "author_type", null: false
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.bigint "faulty_error_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_type", "author_id"], name: "index_faulty_comments_on_author_type_and_author_id"
+    t.index ["faulty_error_id"], name: "index_faulty_comments_on_faulty_error_id"
   end
 
   create_table "faulty_errors", force: :cascade do |t|
@@ -170,6 +181,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_13_131144) do
   add_foreign_key "addresses", "customers"
   add_foreign_key "auth_sessions", "customers"
   add_foreign_key "cities", "regions"
+  add_foreign_key "faulty_comments", "faulty_errors"
   add_foreign_key "faulty_events", "faulty_errors"
   add_foreign_key "notifications", "customers"
   add_foreign_key "regions", "countries"
