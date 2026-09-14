@@ -33,5 +33,13 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :admin do
+    get "login", to: "sessions#new"
+    post "login", to: "sessions#create"
+    delete "logout", to: "sessions#destroy"
+
+    get "/", to: "dashboard#index", as: :dashboard
+  end
+
   mount Faulty::Engine => "/faulty"
 end

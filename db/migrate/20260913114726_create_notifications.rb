@@ -1,7 +1,7 @@
 class CreateNotifications < ActiveRecord::Migration[8.1]
   def change
     create_table :notifications do |t|
-      t.references :customer, null: true, foreign_key: true
+      t.references :user, null: true, foreign_key: true
 
       t.string :title_en, null: false
       t.string :title_ar, null: false

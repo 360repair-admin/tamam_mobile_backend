@@ -1,7 +1,5 @@
-class Customer < ApplicationRecord
-  has_many :addresses, dependent: :destroy
-  has_many :auth_sessions, dependent: :destroy
-  has_many :notifications, dependent: :destroy
+class Customer < User
+  alias_attribute :full_name, :name
 
-  validates :locale, inclusion: { in: %w[ar en] }
+  validates :phone_number, presence: true, uniqueness: true
 end
