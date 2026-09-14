@@ -39,6 +39,8 @@ Rails.application.routes.draw do
     delete "logout", to: "sessions#destroy"
 
     get "/", to: "dashboard#index", as: :dashboard
+
+    resources :customers
   end
 
   mount Faulty::Engine => "/faulty"

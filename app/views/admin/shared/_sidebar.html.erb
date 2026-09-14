@@ -1,0 +1,142 @@
+<aside class="w-full md:w-72 bg-slate-900 text-slate-300 flex flex-col flex-shrink-0 overflow-y-auto sidebar-scroll
+               max-h-[40vh] md:max-h-none border-b md:border-b-0 md:border-r border-slate-800">
+
+  <!-- Brand -->
+  <div class="flex items-center gap-3 px-6 py-5 border-b border-slate-800">
+    <i class="fas fa-cube text-3xl text-sky-400"></i>
+
+    <div>
+      <h1 class="text-xl font-semibold text-white tracking-tight">
+        TAMAM
+      </h1>
+      <p class="text-xs text-slate-500">
+        Mobile Admin
+      </p>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex-1 px-4 py-6 space-y-6 overflow-y-auto">
+
+    <!-- Main -->
+    <div>
+      <p class="px-3 text-[0.65rem] font-semibold uppercase tracking-wider text-slate-500 mb-2">
+        Main
+      </p>
+
+      <div class="space-y-1">
+        <%= link_to admin_dashboard_path,
+              class: "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors #{request.path == admin_dashboard_path ? 'bg-slate-800 text-white border border-slate-700 shadow-md' : 'hover:bg-slate-800/60'}" do %>
+          <i class="fas fa-chart-pie w-5 text-center <%= request.path == admin_dashboard_path ? 'text-sky-400' : 'text-slate-400' %>"></i>
+          <span class="text-sm font-medium">Dashboard</span>
+        <% end %>
+
+        <%= link_to admin_customers_path,
+              class: "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors #{request.path.start_with?('/admin/customers') ? 'bg-slate-800 text-white border border-slate-700 shadow-md' : 'hover:bg-slate-800/60'}" do %>
+          <i class="fas fa-users w-5 text-center <%= request.path.start_with?('/admin/customers') ? 'text-sky-400' : 'text-slate-400' %>"></i>
+          <span class="text-sm font-medium">Customers</span>
+          <span class="ml-auto text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded-full">
+            <%= Customer.count %>
+          </span>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Configuration -->
+    <div>
+      <p class="px-3 text-[0.65rem] font-semibold uppercase tracking-wider text-slate-500 mb-2">
+        Configuration
+      </p>
+
+      <div class="space-y-1">
+        <%= link_to "#",
+              class: "flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/60 transition-colors" do %>
+          <i class="fas fa-sliders-h w-5 text-center text-slate-400"></i>
+          <span class="text-sm font-medium">Configurations</span>
+        <% end %>
+
+        <%= link_to "#",
+              class: "flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/60 transition-colors" do %>
+          <i class="fas fa-car w-5 text-center text-slate-400"></i>
+          <span class="text-sm font-medium">Vehicle Resources</span>
+        <% end %>
+
+        <%= link_to "#",
+              class: "flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/60 transition-colors" do %>
+          <i class="fas fa-list w-5 text-center text-slate-400"></i>
+          <span class="text-sm font-medium">Service Categories</span>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- System -->
+    <div>
+      <p class="px-3 text-[0.65rem] font-semibold uppercase tracking-wider text-slate-500 mb-2">
+        System
+      </p>
+
+      <div class="space-y-1">
+        <%= link_to "#",
+              class: "flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/60 transition-colors" do %>
+          <i class="fas fa-server w-5 text-center text-slate-400"></i>
+          <span class="text-sm font-medium">Infrastructure</span>
+        <% end %>
+
+        <%= link_to "#",
+              class: "flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/60 transition-colors" do %>
+          <i class="fas fa-shield-halved w-5 text-center text-slate-400"></i>
+          <span class="text-sm font-medium">Security</span>
+        <% end %>
+
+        <%= link_to "#",
+              class: "flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/60 transition-colors" do %>
+          <i class="fas fa-plug w-5 text-center text-slate-400"></i>
+          <span class="text-sm font-medium">Integrations</span>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Support -->
+    <div>
+      <p class="px-3 text-[0.65rem] font-semibold uppercase tracking-wider text-slate-500 mb-2">
+        Support
+      </p>
+
+      <div class="space-y-1">
+        <%= link_to "#",
+              class: "flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/60 transition-colors" do %>
+          <i class="fas fa-circle-question w-5 text-center text-slate-400"></i>
+          <span class="text-sm font-medium">Help Center</span>
+        <% end %>
+
+        <%= link_to "#",
+              class: "flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/60 transition-colors" do %>
+          <i class="fas fa-gear w-5 text-center text-slate-400"></i>
+          <span class="text-sm font-medium">Settings</span>
+        <% end %>
+      </div>
+    </div>
+
+  </nav>
+
+  <!-- Footer -->
+  <div class="px-6 py-5 border-t border-slate-800 mt-auto">
+    <div class="flex items-center gap-2 text-xs text-slate-400">
+      <span class="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_#4ade80]"></span>
+      <span>All systems operational</span>
+    </div>
+
+    <div class="flex gap-4 mt-3 text-[0.7rem] text-slate-500">
+      <span>
+        <i class="far fa-clock mr-1"></i>
+        v1.0.0
+      </span>
+
+      <span>
+        <i class="fas fa-lock mr-1"></i>
+        secure
+      </span>
+    </div>
+  </div>
+
+</aside>
