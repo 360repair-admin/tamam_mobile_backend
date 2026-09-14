@@ -1,18 +1,15 @@
-<div class="mb-8 flex items-start justify-between gap-4">
-  <div>
-    <h1 class="text-2xl font-bold tracking-tight text-slate-900">
-      Customers
-    </h1>
-
-    <p class="mt-1 text-sm text-slate-500">
-      Manage TAMAM mobile customers.
-    </p>
-  </div>
-</div>
+<%= render "admin/shared/header",
+  breadcrumbs: [{ label: "Customers" }],
+  title: "Customers"
+%>
 
 <%= render "admin/shared/table",
   rows: @customers,
   columns: [
+    {
+      label: "ID",
+      attribute: :id
+    },
     {
       label: "Name",
       render: ->(customer) {
@@ -22,11 +19,6 @@
             customer.name.presence || "—",
             class: "font-medium text-slate-900"
           ),
-          content_tag(
-            :div,
-            "##{customer.id}",
-            class: "mt-0.5 text-xs text-slate-500"
-          )
         ])
       }
     },
@@ -44,6 +36,8 @@
       render: ->(customer) {
         if customer.deleted_at.present?
           admin_badge("Deactivated", type: :danger)
+        elsif customer.phone_number_verified_at.blank?
+          admin_badge("Unverified", type: :warning)
         else
           admin_badge("Active", type: :success)
         end
