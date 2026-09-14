@@ -41,6 +41,7 @@ Rails.application.routes.draw do
     get "/", to: "dashboard#index", as: :dashboard
 
     resources :customers, only: [:index, :show]
+    resources :vehicle_makes
   end
 
   mount Faulty::Engine => "/faulty"

@@ -1,0 +1,91 @@
+<%= render "admin/shared/header",
+  breadcrumbs: [
+    {
+      label: "Vehicle Makes",
+      path: admin_vehicle_makes_path
+    },
+    {
+      label: @vehicle_make.name_en
+    }
+  ],
+  title: @vehicle_make.name_en,
+  subtitle: "Vehicle make details.",
+  actions: [
+    {
+      label: "Back to Vehicle Makes",
+      path: admin_vehicle_makes_path
+    }
+  ]
+%>
+
+<%= render "admin/shared/details",
+  record: @vehicle_make,
+  fields: [
+    {
+      label: "ID",
+      attribute: :id
+    },
+    {
+      label: "Name (English)",
+      attribute: :name_en
+    },
+    {
+      label: "Name (Arabic)",
+      attribute: :name_ar
+    },
+    {
+      label: "Models",
+      render: ->(vehicle_make) {
+        vehicle_make.vehicle_models.count
+      }
+    },
+    {
+      label: "Created",
+      render: ->(vehicle_make) {
+        vehicle_make.created_at.strftime("%d %b %Y, %H:%M")
+      }
+    },
+    {
+      label: "Updated",
+      render: ->(vehicle_make) {
+        vehicle_make.updated_at.strftime("%d %b %Y, %H:%M")
+      }
+    }
+  ]
+%>
+
+<div class="mt-6">
+  <div class="mb-4">
+    <h3 class="text-lg font-semibold text-primary">
+      Vehicle Models
+    </h3>
+
+    <p class="mt-1 text-sm text-text-muted">
+      Models associated with <%= @vehicle_make.name_en %>.
+    </p>
+  </div>
+
+  <%= render "admin/shared/table",
+    rows: @vehicle_models,
+    columns: [
+      {
+        label: "ID",
+        attribute: :id
+      },
+      {
+        label: "Name (English)",
+        attribute: :name_en
+      },
+      {
+        label: "Name (Arabic)",
+        attribute: :name_ar
+      },
+      {
+        label: "Created",
+        render: ->(vehicle_model) {
+          vehicle_model.created_at.strftime("%d %b %Y")
+        }
+      }
+    ]
+  %>
+</div>
