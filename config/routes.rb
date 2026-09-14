@@ -23,8 +23,10 @@ Rails.application.routes.draw do
 
       get "me", to: "profiles#show"
       patch "me", to: "profiles#update"
-      post "me/delete/request-otp", to: "profiles#request_deletion_otp"
       delete "me", to: "profiles#destroy"
+
+      post "me/edit/otp", to: "profiles#request_profile_edit_otp"
+      post "me/delete/otp", to: "profiles#request_profile_deletion_otp"
 
       resources :addresses, only: [:index, :create, :update, :destroy]
       resources :notifications, only: [:index, :update]

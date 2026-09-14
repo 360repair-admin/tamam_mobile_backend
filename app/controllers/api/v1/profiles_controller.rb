@@ -6,7 +6,16 @@ module Api
       end
 
       def update
+        unless Otp::Token.valid?(
+          token: params[:otp_token],
+          customer: current_customer,
+          purpose: "profile_edit"
+        )
+          return render_error("invalid_otp_token")
+        end
+
         current_customer.update!(profile_params)
+
         render json: { customer: current_customer }
       end
 
@@ -51,10 +60,19 @@ module Api
         render json: { message: "Account deleted successfully" }, status: :ok
       end
 
-      def request_deletion_otp
+      def request_profile_deletion_otp
         otp_response = Otp::Request.call(
           phone_number: current_customer.phone_number,
           purpose: "account_deletion"
+        )
+
+        render json: otp_response, status: :accepted
+      end
+
+      def request_profile_edit_otp
+        otp_response = Otp::Request.call(
+          phone_number: current_customer.phone_number,
+          purpose: "profile_edit"
         )
 
         render json: otp_response, status: :accepted
@@ -69,7 +87,8 @@ module Api
       def render_error(code)
         render json: {
           error: {
-            code: code, message: I18n.t("errors.#{code}")
+            code: code,
+            message: I18n.t("errors.#{code}")
           }
         }, status: :unprocessable_entity
       end
