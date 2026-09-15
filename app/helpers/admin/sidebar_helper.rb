@@ -100,6 +100,13 @@ module Admin::SidebarHelper
         active: -> { request.path.start_with?("/admin/colors") }
       },
       {
+        label: "Service Categories",
+        path: admin_service_categories_path,
+        permission: :service_categories_view,
+        implemented: true,
+        active: -> { request.path.start_with?("/admin/service_categories") }
+      },
+      {
         label: "Developer Tools",
         permission: nil,
         implemented: true,

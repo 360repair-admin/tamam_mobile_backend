@@ -1,0 +1,52 @@
+<%= render "admin/shared/header",
+  breadcrumbs: [
+    { label: "Service Categories", path: admin_service_categories_path },
+    { label: @service_category.name_en }
+  ],
+  title: @service_category.name_en,
+  subtitle: "Service category details."
+%>
+
+<%= render "admin/shared/details",
+  record: @service_category,
+  fields: [
+    {
+      label: "ID",
+      attribute: :id
+    },
+    {
+      label: "Name (English)",
+      attribute: :name_en
+    },
+    {
+      label: "Name (Arabic)",
+      attribute: :name_ar
+    },
+    {
+      label: "Description (English)",
+      attribute: :description_en
+    },
+    {
+      label: "Description (Arabic)",
+      attribute: :description_ar
+    },
+    {
+      label: "Active",
+      render: ->(category) {
+        category.active? ? "Yes" : "No"
+      }
+    },
+    {
+      label: "Created",
+      render: ->(category) {
+        category.created_at.strftime("%d %b %Y %H:%M")
+      }
+    },
+    {
+      label: "Updated",
+      render: ->(category) {
+        category.updated_at.strftime("%d %b %Y %H:%M")
+      }
+    }
+  ]
+%>

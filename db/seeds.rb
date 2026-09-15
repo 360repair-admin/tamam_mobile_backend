@@ -26,6 +26,9 @@ load Rails.root.join("db/seeds/vehicle_models.rb")
 puts "Seeding colors..."
 load Rails.root.join("db/seeds/colors.rb")
 
+puts "Seeding Service Categories..."
+load Rails.root.join("db/seeds/service_categories.rb")
+
 admin = Admin.find_or_initialize_by(email: "super_admin@example.com")
 
 admin.name = "Admin"

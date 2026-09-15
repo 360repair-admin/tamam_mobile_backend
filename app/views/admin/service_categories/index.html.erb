@@ -1,0 +1,47 @@
+<%= render "admin/shared/header",
+  breadcrumbs: [
+    { label: "Service Categories" }
+  ],
+  title: "Service Categories",
+  subtitle: "Manage service categories."
+%>
+
+<%= render "admin/shared/table",
+  rows: @service_categories,
+  columns: [
+    {
+      label: "ID",
+      attribute: :id
+    },
+    {
+      label: "Name (English)",
+      attribute: :name_en
+    },
+    {
+      label: "Name (Arabic)",
+      attribute: :name_ar
+    },
+    {
+      label: "Active",
+      render: ->(category) {
+        category.active? ? "Yes" : "No"
+      }
+    },
+    {
+      label: "Created",
+      render: ->(category) {
+        category.created_at.strftime("%d %b %Y")
+      }
+    }
+  ],
+  actions: [
+    {
+      label: "View",
+      path: ->(category) {
+        admin_service_category_path(category)
+      }
+    }
+  ],
+  empty_message: "No service categories found.",
+  empty_description: "Add service categories through the seed data."
+%>
