@@ -43,24 +43,40 @@
     <% admin_sidebar_menu.each do |item| %>
       <% next unless admin_sidebar_item_visible?(item) %>
 
-      <% active = admin_sidebar_item_active?(item) %>
-      <% badge = admin_sidebar_badge(item) %>
+      <% if item[:children].present? %>
+        <div class="pt-3 first:pt-0">
+          <div class="px-3 pb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">
+            <%= item[:label] %>
+          </div>
 
-      <%= link_to item[:path],
-            class: "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors #{active ? 'bg-primary text-light shadow-sm' : 'text-text-muted hover:bg-primary hover:text-light'}" do %>
+          <div class="space-y-1">
+            <% item[:children].each do |child| %>
+              <% next unless admin_sidebar_item_visible?(child) %>
 
-        <%= admin_sidebar_icon(item[:icon]) %>
+              <% active = admin_sidebar_item_active?(child) %>
 
-        <span class="text-sm font-medium">
-          <%= item[:label] %>
-        </span>
+              <%= link_to child[:path],
+                    class: "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors #{active ? 'bg-primary text-light shadow-sm' : 'text-light hover:bg-primary'}" do %>
 
-        <% if badge.present? %>
-          <span class="ml-auto text-xs bg-tertiary text-primary px-2 py-0.5 rounded-full font-medium">
-            <%= badge %>
+                <span class="text-sm font-medium">
+                  <%= child[:label] %>
+                </span>
+
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% else %>
+        <% active = admin_sidebar_item_active?(item) %>
+
+        <%= link_to item[:path],
+              class: "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors #{active ? 'bg-primary text-light shadow-sm' : 'text-light hover:bg-primary'}" do %>
+
+          <span class="text-sm font-medium">
+            <%= item[:label] %>
           </span>
-        <% end %>
 
+        <% end %>
       <% end %>
     <% end %>
   </nav>
