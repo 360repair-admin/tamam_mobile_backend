@@ -1,5 +1,8 @@
-<aside class="w-full md:w-72 bg-secondary text-light flex flex-col flex-shrink-0 overflow-y-auto sidebar-scroll
-               max-h-[40vh] md:max-h-none border-b md:border-b-0 md:border-r border-sidebar-border">
+<aside class="w-full md:w-72 bg-secondary text-light flex flex-col flex-shrink-0
+              md:sticky md:top-0 md:h-screen
+              overflow-hidden
+              max-h-[40vh] md:max-h-none
+              border-b md:border-b-0 md:border-r border-sidebar-border">
 
   <!-- Brand -->
   <div class="flex items-center gap-3 px-6 py-5 border-b border-sidebar-border">
@@ -63,52 +66,50 @@
   </nav>
 
   <!-- Footer -->
-  <div class="px-6 py-5 border-t border-sidebar-border mt-auto">
+  <div class="flex justify-end gap-2 border-t border-sidebar-border px-4 py-4">
+    <!-- Language -->
+    <%= link_to "#",
+          title: I18n.locale.to_s == "ar" ? "English" : "العربية",
+          aria: {
+            label: I18n.locale.to_s == "ar" ? "Switch to English" : "التبديل إلى العربية"
+          },
+          class: "flex h-9 w-9 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-primary hover:text-light" do %>
 
-    <div class="flex items-center gap-2 text-xs text-text-muted">
-      <span class="w-2 h-2 rounded-full bg-success"></span>
-      <span>All systems operational</span>
-    </div>
+      <% if I18n.locale.to_s == "ar" %>
+        <!-- US Flag -->
+        <span class="text-lg leading-none">🇺🇸</span>
+      <% else %>
+        <!-- Saudi Flag -->
+        <span class="text-lg leading-none">🇸🇦</span>
+      <% end %>
+    <% end %>
 
-    <div class="flex gap-4 mt-3 text-[0.7rem] text-text-muted">
+    <!-- Logout -->
+    <%= button_to admin_logout_path,
+          method: :delete,
+          title: "Logout",
+          aria: { label: "Logout" },
+          class: "flex h-9 w-9 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-primary hover:text-light" do %>
 
-      <span class="flex items-center gap-1">
-        <svg
-          class="h-3.5 w-3.5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="1.8"
-        >
-          <circle cx="12" cy="12" r="9" />
-          <path
-            stroke-linecap="round"
-            d="M12 7v5l3 2"
-          />
-        </svg>
-
-        v1.0.0
-      </span>
-
-      <span class="flex items-center gap-1">
-        <svg
-          class="h-3.5 w-3.5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="1.8"
-        >
-          <rect x="5" y="10" width="14" height="10" rx="2" />
-          <path
-            stroke-linecap="round"
-            d="M8 10V7a4 4 0 018 0v3"
-          />
-        </svg>
-
-        secure
-      </span>
-
-    </div>
+      <svg
+        class="h-5 w-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="1.8"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M10 17l5-5-5-5M15 12H3"
+        />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M21 19V5a2 2 0 00-2-2h-6"
+        />
+      </svg>
+    <% end %>
   </div>
 
 </aside>
