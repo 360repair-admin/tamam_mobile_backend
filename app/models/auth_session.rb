@@ -1,5 +1,5 @@
 class AuthSession < ApplicationRecord
-  belongs_to :customer
+  belongs_to :user
 
   validates :jti, presence: true, uniqueness: true
   validates :expires_at, presence: true
