@@ -23,4 +23,17 @@ load Rails.root.join("db/seeds/vehicle_makes.rb")
 puts "Seeding vehicle models..."
 load Rails.root.join("db/seeds/vehicle_models.rb")
 
+admin = Admin.find_or_initialize_by(email: "super_admin@example.com")
+
+admin.name = "Admin"
+admin.password = "password"
+admin.password_confirmation = "password"
+admin.locale = "ar"
+admin.type = "Admin"
+admin.deleted_at = nil
+
+admin.save!
+
+puts "Admin created: #{admin.email}"
+
 puts "Seeding completed."

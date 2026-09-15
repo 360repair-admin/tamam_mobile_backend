@@ -3,11 +3,11 @@ module Admin::SidebarHelper
     [
       {
         label: "Dashboard",
-        path: admin_dashboard_path,
+        path: admin_root_path,
         icon: :dashboard,
         permission: nil,
         implemented: true,
-        active: -> { request.path == admin_dashboard_path }
+        active: -> { request.path == admin_root_path }
       },
       {
         label: "Customers",
