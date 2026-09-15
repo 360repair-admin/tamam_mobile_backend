@@ -1,0 +1,38 @@
+<%= render "admin/shared/header",
+  breadcrumbs: [
+    { label: "Colors", path: admin_colors_path },
+    { label: @color.name_en }
+  ],
+  title: @color.name_en,
+  subtitle: "Vehicle color details."
+%>
+
+<%= render "admin/shared/details",
+  record: @color,
+  fields: [
+    {
+      label: "ID",
+      attribute: :id
+    },
+    {
+      label: "Name (English)",
+      attribute: :name_en
+    },
+    {
+      label: "Name (Arabic)",
+      attribute: :name_ar
+    },
+    {
+      label: "Created",
+      render: ->(color) {
+        color.created_at.strftime("%d %b %Y %H:%M")
+      }
+    },
+    {
+      label: "Updated",
+      render: ->(color) {
+        color.updated_at.strftime("%d %b %Y %H:%M")
+      }
+    }
+  ]
+%>

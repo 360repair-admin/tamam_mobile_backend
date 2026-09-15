@@ -42,6 +42,7 @@ Rails.application.routes.draw do
 
     resources :customers, only: [:index, :show]
     resources :vehicle_makes
+    resources :colors
   end
 
   mount Faulty::Engine => "/faulty"

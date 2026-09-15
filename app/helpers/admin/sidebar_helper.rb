@@ -93,6 +93,13 @@ module Admin::SidebarHelper
         active: -> { request.path.start_with?("/admin/auth_sessions") }
       },
       {
+        label: "Colors",
+        path: admin_colors_path,
+        permission: :colors_view,
+        implemented: true,
+        active: -> { request.path.start_with?("/admin/colors") }
+      },
+      {
         label: "Developer Tools",
         permission: nil,
         implemented: true,
