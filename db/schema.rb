@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_13_131145) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_15_104813) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -18,21 +18,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_13_131145) do
     t.string "address_line"
     t.bigint "city_id", null: false
     t.datetime "created_at", null: false
-    t.bigint "customer_id", null: false
     t.boolean "is_default", default: false, null: false
+    t.string "label"
+    t.decimal "latitude", precision: 10, scale: 7
+    t.decimal "longitude", precision: 10, scale: 7
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
     t.index ["city_id"], name: "index_addresses_on_city_id"
-    t.index ["customer_id"], name: "index_addresses_on_customer_id"
+    t.index ["user_id"], name: "index_addresses_on_user_id"
   end
 
   create_table "auth_sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.bigint "customer_id", null: false
     t.datetime "expires_at", null: false
     t.string "jti", null: false
     t.datetime "revoked_at"
     t.datetime "updated_at", null: false
-    t.index ["customer_id"], name: "index_auth_sessions_on_customer_id"
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_auth_sessions_on_user_id"
   end
 
   create_table "cities", force: :cascade do |t|
@@ -44,25 +47,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_13_131145) do
     t.index ["region_id"], name: "index_cities_on_region_id"
   end
 
-  create_table "countries", force: :cascade do |t|
-    t.string "code"
+  create_table "colors", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name_ar", null: false
     t.string "name_en", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "customers", force: :cascade do |t|
+  create_table "countries", force: :cascade do |t|
+    t.string "code"
     t.datetime "created_at", null: false
-    t.datetime "deleted_at"
-    t.string "email"
-    t.string "full_name"
-    t.string "locale", default: "ar", null: false
-    t.string "phone_number", null: false
-    t.datetime "phone_number_verified_at"
-    t.datetime "terms_accepted_at"
+    t.string "name_ar", null: false
+    t.string "name_en", null: false
     t.datetime "updated_at", null: false
-    t.index ["phone_number"], name: "index_customers_on_phone_number", unique: true
   end
 
   create_table "faulty_comments", force: :cascade do |t|
@@ -114,12 +111,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_13_131145) do
     t.text "body_ar", null: false
     t.text "body_en", null: false
     t.datetime "created_at", null: false
-    t.bigint "customer_id"
     t.datetime "read_at"
     t.string "title_ar", null: false
     t.string "title_en", null: false
     t.datetime "updated_at", null: false
-    t.index ["customer_id"], name: "index_notifications_on_customer_id"
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
   create_table "otp_requests", force: :cascade do |t|
@@ -170,6 +167,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_13_131145) do
     t.index ["unique_name"], name: "index_sms_templates_on_unique_name", unique: true
   end
 
+  create_table "users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "deleted_at"
+    t.string "email"
+    t.string "locale", default: "ar", null: false
+    t.string "name"
+    t.string "password_digest"
+    t.string "phone_number"
+    t.datetime "phone_number_verified_at"
+    t.datetime "terms_accepted_at"
+    t.string "type", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["phone_number"], name: "index_users_on_phone_number", unique: true
+  end
+
   create_table "vehicle_makes", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name_ar", null: false
@@ -177,13 +190,45 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_13_131145) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "vehicle_models", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name_ar", null: false
+    t.string "name_en", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "vehicle_make_id", null: false
+    t.index ["vehicle_make_id", "name_ar"], name: "index_vehicle_models_on_vehicle_make_id_and_name_ar", unique: true
+    t.index ["vehicle_make_id", "name_en"], name: "index_vehicle_models_on_vehicle_make_id_and_name_en", unique: true
+    t.index ["vehicle_make_id"], name: "index_vehicle_models_on_vehicle_make_id"
+  end
+
+  create_table "vehicles", force: :cascade do |t|
+    t.string "chassis_number"
+    t.bigint "color_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "manufacturing_year", null: false
+    t.string "plate_left_letter", null: false
+    t.string "plate_middle_letter", null: false
+    t.string "plate_number", null: false
+    t.string "plate_right_letter", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.bigint "vehicle_model_id", null: false
+    t.index ["color_id"], name: "index_vehicles_on_color_id"
+    t.index ["user_id"], name: "index_vehicles_on_user_id"
+    t.index ["vehicle_model_id"], name: "index_vehicles_on_vehicle_model_id"
+  end
+
   add_foreign_key "addresses", "cities"
-  add_foreign_key "addresses", "customers"
-  add_foreign_key "auth_sessions", "customers"
+  add_foreign_key "addresses", "users"
+  add_foreign_key "auth_sessions", "users"
   add_foreign_key "cities", "regions"
   add_foreign_key "faulty_comments", "faulty_errors"
   add_foreign_key "faulty_events", "faulty_errors"
-  add_foreign_key "notifications", "customers"
+  add_foreign_key "notifications", "users"
   add_foreign_key "regions", "countries"
   add_foreign_key "sms_messages", "sms_templates"
+  add_foreign_key "vehicle_models", "vehicle_makes"
+  add_foreign_key "vehicles", "colors"
+  add_foreign_key "vehicles", "users"
+  add_foreign_key "vehicles", "vehicle_models"
 end

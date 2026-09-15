@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TAMAM Mobile Admin</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+  </head>
+
+  <body class="min-h-screen bg-page">
+    <div class="min-h-screen flex flex-col md:flex-row">
+
+      <% if current_admin %>
+        <%= render "admin/shared/sidebar" %>
+      <% end %>
+
+      <main class="flex-1 min-w-0 flex flex-col bg-page">
+
+        <% if current_admin %>
+
+          <% if flash[:notice] %>
+            <div class="px-6 pt-4">
+              <div class="mx-auto max-w-7xl rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                <%= flash[:notice] %>
+              </div>
+            </div>
+          <% end %>
+
+          <% if flash[:alert] %>
+            <div class="px-6 pt-4">
+              <div class="mx-auto max-w-7xl rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                <%= flash[:alert] %>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="flex-1 px-6 py-8">
+            <%= yield %>
+          </div>
+
+        <% else %>
+
+          <div class="flex-1">
+            <%= yield %>
+          </div>
+
+        <% end %>
+
+      </main>
+    </div>
+  </body>
+</html>

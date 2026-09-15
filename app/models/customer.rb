@@ -1,7 +1,8 @@
-class Customer < ApplicationRecord
-  has_many :addresses, dependent: :destroy
-  has_many :auth_sessions, dependent: :destroy
-  has_many :notifications, dependent: :destroy
+class Customer < User
+  has_many :vehicles, foreign_key: :user_id, dependent: :destroy
+  has_many :addresses, foreign_key: :user_id, dependent: :destroy
 
-  validates :locale, inclusion: { in: %w[ar en] }
+  alias_attribute :full_name, :name
+
+  validates :phone_number, presence: true, uniqueness: true
 end

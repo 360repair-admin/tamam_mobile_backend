@@ -1,0 +1,55 @@
+<%= render "admin/shared/header",
+  breadcrumbs: [{ label: "Customers" }],
+  title: "Customers"
+%>
+
+<%= render "admin/shared/table",
+  rows: @customers,
+  columns: [
+    {
+      label: "ID",
+      attribute: :id
+    },
+    {
+      label: "Name",
+      render: ->(customer) {
+        safe_join([
+          content_tag(
+            :div,
+            customer.name.presence || "—",
+            class: "font-medium text-slate-900"
+          ),
+        ])
+      }
+    },
+    {
+      label: "Phone",
+      attribute: :phone_number
+    },
+    {
+      label: "Email",
+      attribute: :email,
+      fallback: "—"
+    },
+    {
+      label: "Status",
+      render: ->(customer) {
+        if customer.deleted_at.present?
+          admin_badge("Deactivated", type: :danger)
+        elsif customer.phone_number_verified_at.blank?
+          admin_badge("Unverified", type: :warning)
+        else
+          admin_badge("Active", type: :success)
+        end
+      }
+    }
+  ],
+  actions: [
+    {
+      label: "View",
+      path: ->(customer) { admin_customer_path(customer) }
+    }
+  ],
+  empty_message: "No customers found.",
+  empty_description: "Customers will appear here once they register."
+%>

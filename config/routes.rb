@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root "admin/dashboard#index"
 
   namespace :api do
     namespace :v1 do
@@ -28,9 +28,22 @@ Rails.application.routes.draw do
       post "me/edit/otp", to: "profiles#request_profile_edit_otp"
       post "me/delete/otp", to: "profiles#request_profile_deletion_otp"
 
-      resources :addresses, only: [:index, :create, :update, :destroy]
-      resources :notifications, only: [:index, :update]
+      resources :addresses, only: [ :index, :create, :update, :destroy ]
+      resources :notifications, only: [ :index, :update ]
+      resources :vehicles
     end
+  end
+
+  namespace :admin do
+    root "dashboard#index"
+
+    get "login", to: "sessions#new"
+    post "login", to: "sessions#create"
+    delete "logout", to: "sessions#destroy"
+
+    resources :customers, only: [ :index, :show ]
+    resources :vehicle_makes
+    resources :colors
   end
 
   mount Faulty::Engine => "/faulty"

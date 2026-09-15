@@ -1,0 +1,40 @@
+<div class="overflow-hidden border border-border bg-surface shadow-sm">
+  <div class="overflow-x-auto">
+    <table class="min-w-full table-auto">
+      <tbody class="divide-y divide-border-light">
+        <% fields.each do |field| %>
+          <% next if field[:condition].present? && !field[:condition].call(record) %>
+
+          <% value =
+            if field[:render].present?
+              field[:render].call(record)
+            else
+              record.public_send(field[:attribute])
+            end
+          %>
+
+          <tr class="hover:bg-tertiary/50">
+            <th
+              scope="row"
+              class="w-px whitespace-nowrap bg-primary px-3 py-2 text-left text-sm font-semibold text-light"
+            >
+              <%= field[:label] %>
+            </th>
+
+            <td
+              class="px-3 py-2 text-sm text-text <%= field[:value_class] %>"
+            >
+              <% if value.present? %>
+                <%= value %>
+              <% else %>
+                <span class="text-text-muted">
+                  <%= field.fetch(:fallback, "Empty") %>
+                </span>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

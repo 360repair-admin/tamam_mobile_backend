@@ -25,4 +25,3 @@ regions.each do |region|
     country: country
   )
 end
-

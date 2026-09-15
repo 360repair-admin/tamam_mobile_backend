@@ -1,0 +1,73 @@
+<% breadcrumbs ||= [] %>
+<% subtitle ||= nil %>
+<% badges ||= [] %>
+<% actions ||= [] %>
+
+<div class="mb-6 border-b border-border pb-6">
+  <!-- Breadcrumbs -->
+  <% if breadcrumbs.present? %>
+    <nav class="mb-3" aria-label="Breadcrumb">
+      <ol class="flex items-center gap-2 text-sm">
+
+        <% breadcrumbs.each_with_index do |breadcrumb, index| %>
+          <% is_last = index == breadcrumbs.length - 1 %>
+
+          <% if is_last || breadcrumb[:path].blank? %>
+            <li class="font-medium text-text">
+              <%= breadcrumb[:label] %>
+            </li>
+          <% else %>
+            <li>
+              <%= link_to breadcrumb[:label], breadcrumb[:path], class: "text-text-muted hover:text-primary" %>
+            </li>
+
+            <li class="text-text-muted" aria-hidden="true">
+              /
+            </li>
+          <% end %>
+        <% end %>
+
+      </ol>
+    </nav>
+  <% end %>
+
+  <!-- Header -->
+  <div class="flex items-center justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-3">
+        <h2 class="text-2xl font-bold text-primary">
+          <%= title %>
+        </h2>
+
+        <% if badges.present? %>
+          <div class="flex items-center gap-2">
+            <% badges.each do |badge| %>
+              <%= admin_badge(
+                    badge[:label],
+                    type: badge[:type]
+                  ) %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <% if subtitle.present? %>
+        <p class="mt-1 text-sm text-text-muted">
+          <%= subtitle %>
+        </p>
+      <% end %>
+    </div>
+
+    <% if actions.present? %>
+      <div class="flex items-center gap-2">
+        <% actions.each do |action| %>
+          <%= link_to(
+                action[:label],
+                action[:path],
+                class: action[:class] || "rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium text-primary hover:bg-tertiary"
+              ) %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

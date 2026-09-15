@@ -1,0 +1,45 @@
+<%= render "admin/shared/header",
+  breadcrumbs: [
+    { label: "Vehicle Makes" }
+  ],
+  title: "Vehicle Makes",
+  subtitle: "Manage vehicle manufacturers."
+%>
+
+<%= render "admin/shared/table",
+  rows: @vehicle_makes,
+  columns: [
+    {
+      label: "ID",
+      attribute: :id
+    },
+    {
+      label: "Name (English)",
+      attribute: :name_en
+    },
+    {
+      label: "Name (Arabic)",
+      attribute: :name_ar
+    },
+    {
+      label: "Models",
+      render: ->(vehicle_make) {
+        vehicle_make.vehicle_models.count
+      }
+    },
+    {
+      label: "Created",
+      render: ->(vehicle_make) {
+        vehicle_make.created_at.strftime("%d %b %Y")
+      }
+    }
+  ],
+  actions: [
+    {
+      label: "View",
+      path: ->(vehicle_make) {
+        admin_vehicle_make_path(vehicle_make)
+      }
+    }
+  ]
+%>

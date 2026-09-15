@@ -1,9 +1,8 @@
 class Address < ApplicationRecord
-  belongs_to :customer
+  belongs_to :customer, foreign_key: :user_id
   belongs_to :city
 
   validates :address_line, presence: true
-  validates :city, presence: true
 
   before_save :make_default, if: :is_default?
 

@@ -1,0 +1,41 @@
+<%= render "admin/shared/header",
+  breadcrumbs: [
+    { label: "Colors" }
+  ],
+  title: "Colors",
+  subtitle: "Manage vehicle colors."
+%>
+
+<%= render "admin/shared/table",
+  rows: @colors,
+  columns: [
+    {
+      label: "ID",
+      attribute: :id
+    },
+    {
+      label: "Name (English)",
+      attribute: :name_en
+    },
+    {
+      label: "Name (Arabic)",
+      attribute: :name_ar
+    },
+    {
+      label: "Created",
+      render: ->(color) {
+        color.created_at.strftime("%d %b %Y")
+      }
+    }
+  ],
+  actions: [
+    {
+      label: "View",
+      path: ->(color) {
+        admin_color_path(color)
+      }
+    }
+  ],
+  empty_message: "No colors found.",
+  empty_description: "Create your first vehicle color."
+%>
