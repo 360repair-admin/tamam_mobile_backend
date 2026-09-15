@@ -1,6 +1,6 @@
 class Customer < User
   has_many :vehicles, foreign_key: :user_id, dependent: :destroy
-  has_many :addresses, dependent: :destroy
+  has_many :addresses, foreign_key: :user_id, dependent: :destroy
 
   alias_attribute :full_name, :name
 

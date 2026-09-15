@@ -1,5 +1,5 @@
 class Vehicle < ApplicationRecord
-  belongs_to :user
+  belongs_to :customer, foreign_key: :user_id
   belongs_to :vehicle_model
   belongs_to :color
 

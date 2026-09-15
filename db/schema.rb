@@ -19,6 +19,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_15_104813) do
     t.bigint "city_id", null: false
     t.datetime "created_at", null: false
     t.boolean "is_default", default: false, null: false
+    t.string "label"
+    t.decimal "latitude", precision: 10, scale: 7
+    t.decimal "longitude", precision: 10, scale: 7
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["city_id"], name: "index_addresses_on_city_id"

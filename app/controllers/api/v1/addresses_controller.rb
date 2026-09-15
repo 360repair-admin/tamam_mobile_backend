@@ -29,6 +29,9 @@ class Api::V1::AddressesController < Api::BaseController
     params.require(:address).permit(
       :city_id,
       :address_line,
+      :label,
+      :latitude,
+      :longitude,
       :is_default
     )
   end
