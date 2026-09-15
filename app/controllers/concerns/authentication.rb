@@ -37,7 +37,7 @@ module Authentication
     @current_customer = @current_session.user
 
     if @current_customer.deleted_at.present?
-      return unauthorized("customer_deactivated", "This account has been deactivated")
+      unauthorized("customer_deactivated", "This account has been deactivated")
     end
   rescue JWT::ExpiredSignature
     unauthorized("token_expired", "Access token has expired")

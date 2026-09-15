@@ -1,5 +1,5 @@
 class Api::V1::Auth::OtpController < Api::BaseController
-  skip_before_action :authenticate_customer!, only: [:create, :verify]
+  skip_before_action :authenticate_customer!, only: [ :create, :verify ]
 
   MAX_ATTEMPTS = 5
   OTP_PURPOSES = %w[signup login profile_edit payment].freeze

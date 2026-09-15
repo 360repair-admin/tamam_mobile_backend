@@ -6644,7 +6644,7 @@ make_models = [
   { "vehicle_make_id": 113, "name_en": "ELANTRA", "name_ar": "ELANTRA" },
   { "vehicle_make_id": 113, "name_en": "OUSADO", "name_ar": "OUSADO" },
   { "vehicle_make_id": 114, "name_en": "TRUCK", "name_ar": "شاحنة" },
-  { "vehicle_make_id": 114, "name_en": "X3000", "name_ar": "X3000" },
+  { "vehicle_make_id": 114, "name_en": "X3000", "name_ar": "X3000" }
 ]
 
 make_models.each do |make_model|

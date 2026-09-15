@@ -9,7 +9,7 @@ class CreateVehicleModels < ActiveRecord::Migration[8.1]
       t.timestamps null: false
     end
 
-    add_index :vehicle_models, [:vehicle_make_id, :name_en], unique: true
-    add_index :vehicle_models, [:vehicle_make_id, :name_ar], unique: true
+    add_index :vehicle_models, [ :vehicle_make_id, :name_en ], unique: true
+    add_index :vehicle_models, [ :vehicle_make_id, :name_ar ], unique: true
   end
 end

@@ -28,8 +28,8 @@ Rails.application.routes.draw do
       post "me/edit/otp", to: "profiles#request_profile_edit_otp"
       post "me/delete/otp", to: "profiles#request_profile_deletion_otp"
 
-      resources :addresses, only: [:index, :create, :update, :destroy]
-      resources :notifications, only: [:index, :update]
+      resources :addresses, only: [ :index, :create, :update, :destroy ]
+      resources :notifications, only: [ :index, :update ]
       resources :vehicles
     end
   end
@@ -41,7 +41,7 @@ Rails.application.routes.draw do
     post "login", to: "sessions#create"
     delete "logout", to: "sessions#destroy"
 
-    resources :customers, only: [:index, :show]
+    resources :customers, only: [ :index, :show ]
     resources :vehicle_makes
     resources :colors
   end

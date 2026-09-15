@@ -1,7 +1,7 @@
 class Admin::SessionsController < ApplicationController
   layout "admin"
 
-  before_action :redirect_if_authenticated, only: [:new, :create]
+  before_action :redirect_if_authenticated, only: [ :new, :create ]
 
   helper_method :current_admin
 
