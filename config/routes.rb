@@ -30,6 +30,7 @@ Rails.application.routes.draw do
 
       resources :addresses, only: [:index, :create, :update, :destroy]
       resources :notifications, only: [:index, :update]
+      resources :vehicles
     end
   end
 

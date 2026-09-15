@@ -1,39 +1,35 @@
-module Api
-  module V1
-    class AddressesController < Api::BaseController
-      def index
-        render json: current_customer.addresses
-      end
+class Api::V1::AddressesController < Api::BaseController
+  def index
+    render json: current_customer.addresses
+  end
 
-      def create
-        address = current_customer.addresses.create!(address_params)
+  def create
+    address = current_customer.addresses.create!(address_params)
 
-        render json: address, status: :created
-      end
+    render json: address, status: :created
+  end
 
-      def update
-        address = current_customer.addresses.find(params[:id])
-        address.update!(address_params)
+  def update
+    address = current_customer.addresses.find(params[:id])
+    address.update!(address_params)
 
-        render json: address
-      end
+    render json: address
+  end
 
-      def destroy
-        address = current_customer.addresses.find(params[:id])
-        address.destroy!
+  def destroy
+    address = current_customer.addresses.find(params[:id])
+    address.destroy!
 
-        head :no_content
-      end
+    head :no_content
+  end
 
-      private
+  private
 
-      def address_params
-        params.require(:address).permit(
-          :city_id,
-          :address_line,
-          :is_default
-        )
-      end
-    end
+  def address_params
+    params.require(:address).permit(
+      :city_id,
+      :address_line,
+      :is_default
+    )
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_15_101440) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_15_104813) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -198,6 +198,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_15_101440) do
     t.index ["vehicle_make_id"], name: "index_vehicle_models_on_vehicle_make_id"
   end
 
+  create_table "vehicles", force: :cascade do |t|
+    t.string "chassis_number"
+    t.bigint "color_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "manufacturing_year", null: false
+    t.string "plate_left_letter", null: false
+    t.string "plate_middle_letter", null: false
+    t.string "plate_number", null: false
+    t.string "plate_right_letter", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.bigint "vehicle_model_id", null: false
+    t.index ["color_id"], name: "index_vehicles_on_color_id"
+    t.index ["user_id"], name: "index_vehicles_on_user_id"
+    t.index ["vehicle_model_id"], name: "index_vehicles_on_vehicle_model_id"
+  end
+
   add_foreign_key "addresses", "cities"
   add_foreign_key "addresses", "users"
   add_foreign_key "auth_sessions", "users"
@@ -208,4 +225,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_15_101440) do
   add_foreign_key "regions", "countries"
   add_foreign_key "sms_messages", "sms_templates"
   add_foreign_key "vehicle_models", "vehicle_makes"
+  add_foreign_key "vehicles", "colors"
+  add_foreign_key "vehicles", "users"
+  add_foreign_key "vehicles", "vehicle_models"
 end
