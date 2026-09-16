@@ -65,7 +65,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_16_072341) do
   create_table "devices", force: :cascade do |t|
     t.string "app_version"
     t.datetime "created_at", null: false
-    t.string "device_id"
     t.datetime "last_seen_at"
     t.string "platform", null: false
     t.string "token", null: false
