@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_15_122105) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_16_072341) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -60,6 +60,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_15_122105) do
     t.string "name_ar", null: false
     t.string "name_en", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "devices", force: :cascade do |t|
+    t.string "app_version"
+    t.datetime "created_at", null: false
+    t.string "device_id"
+    t.datetime "last_seen_at"
+    t.string "platform", null: false
+    t.string "token", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_devices_on_user_id"
   end
 
   create_table "faulty_comments", force: :cascade do |t|
@@ -233,6 +245,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_15_122105) do
   add_foreign_key "addresses", "users"
   add_foreign_key "auth_sessions", "users"
   add_foreign_key "cities", "regions"
+  add_foreign_key "devices", "users"
   add_foreign_key "faulty_comments", "faulty_errors"
   add_foreign_key "faulty_events", "faulty_errors"
   add_foreign_key "notifications", "users"

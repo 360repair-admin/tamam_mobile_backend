@@ -45,6 +45,7 @@ Rails.application.routes.draw do
     resources :vehicle_makes
     resources :colors
     resources :service_categories, only: %i[index show]
+    resources :devices, only: [:index, :create, :destroy]
   end
 
   mount Faulty::Engine => "/faulty"
