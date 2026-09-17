@@ -31,6 +31,10 @@ Rails.application.routes.draw do
       resources :addresses, only: [ :index, :create, :update, :destroy ]
       resources :notifications, only: [ :index, :update ]
       resources :vehicles
+      resources :vehicle_makes, only: [:index] do
+        resources :vehicle_models, only: [:index]
+      end
+      resources :colors, only: [:index]
     end
   end
 
