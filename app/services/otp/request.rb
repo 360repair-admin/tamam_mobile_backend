@@ -14,6 +14,10 @@ class Otp::Request
   def call
     otp = SecureRandom.random_number(10_000).to_s.rjust(4, "0")
 
+    Rails.logger.info(
+      "[OTP] phone=#{@phone_number} purpose=#{@purpose} code=#{otp}"
+    ) if Rails.env.staging?
+
     otp_request = OtpRequest.create!(
       phone_number: @phone_number,
       purpose: @purpose,
